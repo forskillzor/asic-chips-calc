@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2>Antminer T17</h2>
     <div class="table">
       <div v-for="row in rows" :key="row" class="row">
         <div class="col" v-for="col in cols" :key="col">
@@ -25,7 +26,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 't17-table',
   props: {
     msg: String
   },
@@ -67,19 +68,6 @@ export default {
     }
   },
   computed: {
-    chips : function() {
-      const num = this.domen;
-      const result = [];
-      let domens = 0;
-      for (let i = 0; i < this.arr.length;) {
-        result.push([]);
-        for(let j = 0; j < num; j++){
-          result[domens].push(Number(this.arr[i++]))
-        }
-        domens++;
-      }
-      return result;
-    }
   }
 }
 </script>
