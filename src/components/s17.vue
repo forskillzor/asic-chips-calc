@@ -4,23 +4,23 @@
     <div class="table">
       <div v-for="row in rows" :key="row" class="row">
         <div class="col" v-for="col in cols" :key="col">
-          <input type="number" v-model="arr[(row-1)*domen+col-1]" class="chip-data"/>
+          <input type="number" v-model="arr[(row-1)*domain+col-1]" class="chip-data"/>
         </div>
-        <div>{{arr[row-1] + arr[row] + arr[row+1]}}</div>
+        <div>{{arr[row-1] + arr[row] + arr[row+1] + arr[row+2]}}</div>
       </div>
     </div>
     <button class="calc" v-on:click="calculate">calc</button>
-    <div class="table" v-if="result.length">
-      <div v-for="el, index in result" :key="index" class="row">
-        <div class="chip-id  chip-cell">{{result[index][0].id}}</div>
-        <div class="chip-imp chip-cell">{{result[index][0].imp}}</div>
-        <div class="chip-id  chip-cell">{{result[index][1].id}}</div>
-        <div class="chip-imp chip-cell">{{result[index][1].imp}}</div>
-        <div class="chip-id  chip-cell">{{result[index][2].id}}</div>
-        <div class="chip-imp chip-cell">{{result[index][2].imp}}</div>
-        <div class="chip-id  chip-cell">{{result[index][3].id}}</div>
-        <div class="chip-imp chip-cell">{{result[index][3].imp}}</div>
-        <div class="chip-sum chip-cell">{{// result[index][4].sum}}</div>
+    <div class="table" v-if="toggle">
+      <div v-for="el in calculate()" :key="el" class="row">
+        <div class="chip-id  chip-cell">{{el[0].id}}</div>
+        <div class="chip-imp chip-cell">{{el[0].imp}}</div>
+        <div class="chip-id  chip-cell">{{el[1].id}}</div>
+        <div class="chip-imp chip-cell">{{el[1].imp}}</div>
+        <div class="chip-id  chip-cell">{{el[2].id}}</div>
+        <div class="chip-imp chip-cell">{{el[2].imp}}</div>
+        <div class="chip-id  chip-cell">{{el[3].id}}</div>
+        <div class="chip-imp chip-cell">{{el[3].imp}}</div>
+        <div class="chip-sum chip-cell">{{el[4]}}</div>
       </div>
     </div>
   </div>
@@ -51,16 +51,16 @@ export default {
               3.0, 2.8, 1.9,
               2.4, 3.1, 3.5
       ],
-      domen: 4,
+      domain: 4,
       rows: 12,
       cols: 4,
-      result: []
+      toggle: false
     }
   },
   methods: {
     calculate() {
-      this.result = [];
-      const output = this.arr.map((item, i)=> ({id: i+1, imp: item, impSum: 0}))
+      let result = [];
+      const output = this.arr.map((item, i)=> ({id: i+1, imp: item}))
       const sortedOutput = output.sort((a, b)=>a.imp - b.imp)
 
       const r1 = sortedOutput.slice(0, 12);
@@ -68,29 +68,43 @@ export default {
       const r3 = sortedOutput.slice(24, 36).reverse();
       const r4 = sortedOutput.slice(36, 48).reverse();
 
+      r1.forEach((el) => {result.push([el])});
+      r2.forEach((el, i) => {result[i].push(el)});
 
-      // for (let i= 0; i < this.rows; i++) {
-      //   this.result.push([r1[i], r2r[i], r3[i], r4r[i] ,{sum:r1[i].imp + r2r[i].imp + r3[i].imp + r4r[i].imp}]);
-      // }
+      console.dir(result);
 
-      console.log(this.result);
-    }
+      result = result.sort((a, b) => {
+        const sum1 = a.reduce((sum, chip) => sum + chip.imp, 0);
+        const sum2 = b.reduce((sum, chip) => sum + chip.imp, 0);
+        return sum1 - sum2;
+      });
+
+      r3.forEach((el, i) => {result[i].push(el)});
+
+      result = result.sort((a, b) => {
+        const sum1 = a.reduce((sum, chip) => sum + chip.imp, 0);
+        const sum2 = b.reduce((sum, chip) => sum + chip.imp, 0);
+        return sum1 - sum2;
+      });
+
+      r4.forEach((el, i) => {result[i].push(el)});
+
+      result = result.sort((a, b) => {
+        const result = a.reduce((sum, chip) => sum + chip.imp) - b.reduce((sum, chip) => sum + chip.imp);
+        return result;
+      });
+
+      result.forEach(domain => {
+        const sum = domain.reduce((sum, chip) => sum + chip.imp, 0);
+        domain.push(sum);
+      })
+
+      this.toggle = true;
+      return result;
+    },
   },
   computed: {
   }
-}
-function sumArray(arr1, arr2) {
-  const result = [];
-  for (let i = 0; i < arr1.length; i++){
-    let el = {id:}
-    result[i].impSum = arr1[i].imp + arr2[i].imp;
-  } return result;
-}
-function sumLayerArray(arr1, arr2) {
-  const result = [];
-  for (let i = 0; i < arr1.length; i++){
-    result[i].impSum = arr1[i].impSum + arr2[i].imp;
-  } return result;
 }
 </script>
 

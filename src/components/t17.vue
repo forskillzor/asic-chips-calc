@@ -11,7 +11,7 @@
     </div>  
     <button class="calc" v-on:click="calculate">calc</button>
     <div class="table" v-if="result.length">
-      <div v-for="el, index in result" :key="index" class="row">
+      <div v-for="(el, index) in result" :key="index" class="row">
         <div class="chip-id chip-cell">{{result[index][0].id}}</div>
         <div class="chip-imp chip-cell">{{result[index][0].imp}}</div>
         <div class="chip-id chip-cell">{{result[index][1].id}}</div>
