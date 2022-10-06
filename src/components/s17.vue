@@ -96,7 +96,7 @@ export default {
 
       result.forEach(domain => {
         const sum = domain.reduce((sum, chip) => sum + chip.imp, 0);
-        domain.push(sum);
+        domain.push(sum.toFixed(2));
       })
 
       this.toggle = true;
